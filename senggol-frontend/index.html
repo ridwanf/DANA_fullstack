@@ -61,7 +61,7 @@
         </section>
       </section>
       <section id="message">
-        <div class="max-h-96 overflow-auto mb-10">
+        <div class="max-h-96 overflow-auto mb-10 message-section">
           <div v-for="message in messages" :key="message.message_id" class="message">
             <h3 :class="{ 'justify-end': message.direction === 'OUTBOUND' }" class="flex flex-row">
               {{ message.direction === 'OUTBOUND' ?  credential.username : currentPeer.username }}
@@ -75,7 +75,7 @@
         </div>
         <div class="grid gap-5" style="grid-template-columns: 5fr 1fr">
           <form @submit.prevent="handleSend">
-            <div>
+            <div class="mb-5">
               <label for="Message">Message</label>
               <input
                 v-model="message"
@@ -87,7 +87,7 @@
               >
             </div>
             <button
-              class="bg-red-500 rounded text-white disabled:opacity-50"
+              class="bg-red-500 rounded p-3 text-white disabled:opacity-50"
               :disabled="isLoading"
               type="submit"
               @click.prevent="handleSend"
@@ -107,8 +107,8 @@
         return {
           isLoading: false,
           credential: {
-            username: 'jefrydco',
-            password: 'admin123'
+            username: 'ridwan',
+            password: 'password'
           },
           peers: [],
           currentPeer: undefined,
@@ -117,7 +117,10 @@
         }
       },
       mounted() {
-        this.getMessage({id: '1642726711', username: 'peer'})
+        this.getMessage({id: '1643269626', username: 'ridwan'})
+      },
+      updated() {
+        this.$nextTick(() => this.scrollToEnd());
       },
       methods: {
         async handleLogin() {
@@ -172,11 +175,11 @@
           try {
             this.isLoading = true
             this.currentPeer = peer
-            const responseJson = await fetch(`http://localhost:8080/peers/${peer.id}/messages?limit=10`, {
+            const responseJson = await fetch(`http://localhost:8080/peers/${peer.id}/messages?limit=100`, {
               method: 'GET',
               headers: {
                 'Authorization': `Basic ${btoa(`${this.credential.username}:${this.credential.password}`)}`
-              }
+              },
             }).then((_) => _.json())
 
             if (responseJson.code === 'INTERNAL_SERVER_ERROR') {
@@ -189,18 +192,37 @@
             console.log(error)
             alert('Failed to get message')
           } finally {
+            this.scrollToEnd()
             this.isLoading = false
           }
         },
         async handleSend() {
           try {
             this.isLoading = true
+            const responseJson = await fetch(`http://localhost:8080/peers/${this.currentPeer.id}/messages`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Basic ${btoa(`${this.credential.username}:${this.credential.password}`)}`
+              },
+              body: JSON.stringify({
+                content: this.message
+              })
+            })
           } catch (error) {
             console.log(error)
             alert('Failed to send')
           } finally {
             this.isLoading = false
+            this.message=''
+            this.getMessage(this.currentPeer)
           }
+        },
+
+        scrollToEnd() {
+          const messages = document.getElementsByClassName('message-section')[0]
+           if(messages.lastElementChild) {
+              messages.scrollTop = messages.lastElementChild.offsetTop
+           }
         }
       }
     })

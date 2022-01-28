@@ -8,3 +8,5 @@ require (
 	github.com/pkg/errors v0.9.1
 	golang.org/x/crypto v0.0.0-20211202192323-5770296d904e
 )
+
+require github.com/rs/cors v1.8.2 // indirect

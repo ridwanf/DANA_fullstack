@@ -1,8 +1,8 @@
 package postgresql
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 	"senggol/model"
 )
 
@@ -23,7 +23,7 @@ func (repo GetPeerDirectMessagesRepository) GetPeerDirectMessages(userID, peerID
 	JOIN messages ON messages.id = direct_messages.message_id
 	WHERE direct_messages.user_id = $1
 	AND direct_messages.peer_id = $2 %s
-	ORDER by messages.created_at DESC
+	ORDER by messages.created_at ASC
 	LIMIT $3;`
 
 	cursorFilter := ""
