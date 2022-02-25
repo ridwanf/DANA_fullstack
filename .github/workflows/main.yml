@@ -6,7 +6,7 @@ on:
   # pull_request
 
 jobs:
-  build-imaage-and-deploy-to-docker-hub:
+  build-image-and-deploy-to-docker-hub:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
