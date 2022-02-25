@@ -22,13 +22,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./senggol
-          file: Dockerfile
           push: true
           tags: ridwanf/senggol:latest
       - name: Build and push senggol frontend
         uses: docker/build-push-action@v2
         with:
           context: ./senggol-frontend
-          file: Dockerfile
           push: true
           tags: ridwanf/senggol-frontend:latest
