@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	repositories, err := postgresql.GetRepositories("127.0.0.1", "5432", "fansurim", "senggol_local", "p@ssword", "disable")
+	repositories, err := postgresql.GetRepositories("db", "5432", "admin", "senggol", "admin123", "disable")
 	if err != nil {
 		panic(err)
 	}
